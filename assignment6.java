@@ -84,35 +84,33 @@ class EvalVisitor implements IArithVisitor<Double> {
       return iArith.accept(this);
   }
 
-  public Double visit(Const c) {
+  public Double visitConst(Const c) {
       return c.num;
   }
 
-  public Double visit(UnaryFormula uf) {
+  public Double visitUnaryFormula(UnaryFormula uf) {
       return uf.func.apply(uf.child.accept(this));
   }
 
-  public Double visit(BinaryFormula bf) {
+  public Double visitBinaryFormula(BinaryFormula bf) {
       return bf.func.apply(bf.left.accept(this), bf.right.accept(this));
   }
 }
 
-class PrintVisitor implements IArithVisitor<String> {
+class PrintVisitor implements IArithVisitor<String>, Function<IArith, String> {
   public String apply(IArith iArith) {
     return iArith.accept(this);
   }
   
-  public String visit(Const c) {
+  public String visitConst(Const c) {
     return Double.toString(c.num);
   }
   
-  public String visit(UnaryFormula uf) {
+  public String visitUnaryFormula(UnaryFormula uf) {
     return "(" + uf.name + " " + uf.child.accept(this) + ")";
   }
   
-  public String visit(BinaryFormula bf) {
+  public String visitBinaryFormula(BinaryFormula bf) {
     return "(" + bf.name + " " + bf.left.accept(this) + " " + bf.right.accept(this) + ")";
   }
-  
-  
 }
