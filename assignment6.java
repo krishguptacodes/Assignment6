@@ -143,14 +143,12 @@ class AllEvenVisitor implements IArithVisitor<Boolean>, Function<IArith, Boolean
   }
 
   public Boolean visitUnaryFormula(UnaryFormula uf) {
-    return uf.child % 2 == 0;
+    return uf.child.accept(this);
   }
 
   public Boolean visitBinaryFormula(BinaryFormula bf) {
-    return new BinaryFormula(bf.name, bf.func, bf.right, bf.left);
+    return bf.left.accept(this) & bf.right.accept(this);
   }
-
-  public Boolean IsEven(int)
 }
 
 class Plus implements BiFunction<Double, Double, Double> {
@@ -188,4 +186,44 @@ class Srq implements Function<Double, Double> {
       return d * d;
     }    
 }
-}
+
+return t.checkExpect(this.exp1.apply(), 9);
+
+
+
+
+
+
+
+
+
+
+
+
+
+return t.checkExpect(plus1.accept(new EvalVisitor()), 9.0) 
+    && t.checkExpect(const1.accept(new EvalVisitor()), 5)
+    && t.checkExpect(mull.accept(new EvalVisitor()), -18)
+    && t.checkExpect(div1.accept(new EvalVisitor()), 2)
+    && t.checkExpect(minus1.accept(new EvalVisitor()), 1)
+    && t.checkExpect(minus2.accept(new EvalVisitor()), -4)
+    && t.checkExpect(neg1.accept(new EvalVisitor()), -5)
+    && t.checkExpect(sqr1.accept(new EvalVisitor()), 20.25);
+    
+//
+return t.checkExpect(plus1.accept(new PrintVisitor()), "(plus 5.0 4.0)") 
+    && t.checkExpect(const1.accept(new PrintVisitor()), "4")
+    && t.checkExpect(mul1.accept(new PrintVisitor()), "(mul (plus 5.0 4.0) 3.0)")
+    && t.checkExpect(div1.accept(new PrintVisitor()), "(div (plus 5.0 4.0) 4.5)")
+    && t.checkExpect(minus1.accept(new PrintVisitor()), "(minus 5.0 4.0)")
+    && t.checkExpect(minus2.accept(new PrintVisitor()), "(minus -2.0 -2.0)")
+    && t.checkExpect(neg1.accept(new PrintVisitor()), "(neg 5.0)")
+    && t.checkExpect(sqr1.accept(new PrintVisitor()), "(sqr 4.5)");
+
+// mirror tests
+
+//
+return t.checkExpect(plus1.accept(new )
+    
+ 
+
