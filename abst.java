@@ -89,33 +89,79 @@ class BooksByPrice implements Comparator<Book> {
 }
 
 class ExampleBooks {
-  Book book1 = new Book("The Philosopher Stone", "J.K Rowling", 10);
+  Book book1 = new Book("A Book On The Philosopher Stone", "Alexander The Great", 10);
   Book book2 = new Book("Cosmos","Carl Sagan", 20);
-  Book book3 = new Book("Our Place in the Cosmos", "Krish Gupta", 30);
-  Book book4 = new Book("Flowers for Agernon", "Daniel Keyes", 40);
-  Book book5 = new Book("Pele", "Anonymous", 50);
-  Book book6 = new Book("The Killer Who Lived Among Us", "Daniel Nightmare", 60);
-  Book book7 = new Book("Zero", "Math Person", 70);
+  Book book3 = new Book("Daedalus Biogrophy", "Daedalus Ic", 30);
+  Book book4 = new Book("Flowers for Agernon", "Finny Love", 40);
+  Book book5 = new Book("Gardener Story", "George Sally", 50);
+  Book book6 = new Book("Hades", "Harold Patterson", 60);
+  Book book7 = new Book("Icarus", "Italian Love", 70);
+  Book book8 = new Book("Juliet and Romeo", "Janny List", 80);
   
+  // for price
+  
+  //tree 1
   ABST<Book> priceLeaf = new Leaf<Book>(new BooksByPrice());
-  ABST<Book> priceBST2 = new Node<Book>(new BooksByPrice(), book1, priceLeaf, priceLeaf);
-  ABST<Book> priceBST5 = new Node<Book>(new BooksByPrice(), book4, priceLeaf, priceLeaf);
-  ABST<Book> priceBST3 = new Node<Book>(new BooksByPrice(), book2, priceBST2, priceLeaf);
-  ABST<Book> priceBST4 = new Node<Book>(new BooksByPrice(), book3, priceBST3, priceBST5); // bstA
+  ABST<Book> priceBST1 = new Node<Book>(new BooksByPrice(), book1, priceLeaf, priceLeaf);
+  ABST<Book> priceBST2 = new Node<Book>(new BooksByPrice(), book3, priceLeaf, priceLeaf);
+  ABST<Book> priceBST3 = new Node<Book>(new BooksByPrice(), book2, priceBST1, priceBST2);
+  ABST<Book> priceBST4 = new Node<Book>(new BooksByPrice(), book6, priceLeaf, priceLeaf); 
+  ABST<Book> priceBST5 = new Node<Book>(new BooksByPrice(), book8, priceLeaf, priceLeaf); 
+  ABST<Book> priceBST6 = new Node<Book>(new BooksByPrice(), book7, priceBST4, priceBST5); 
+  ABST<Book> priceBST7 = new Node<Book>(new BooksByPrice(), book5, priceBST3, priceBST6); 
+  
+  //tree2
+  ABST<Book> priceBST8 = new Node<Book>(new BooksByPrice(), book4, priceLeaf, priceLeaf);
+  ABST<Book> priceBST9 = new Node<Book>(new BooksByPrice(), book5, priceBST8, priceLeaf);
+  ABST<Book> priceBST13 = new Node<Book>(new BooksByPrice(), book2, priceLeaf, priceLeaf);
+  ABST<Book> priceBST10 = new Node<Book>(new BooksByPrice(), book3, priceBST13, priceBST9); 
+  
+  //tree 3
+  ABST<Book> priceBST11 = new Node<Book>(new BooksByPrice(), book2, priceBST1, priceLeaf);
+  ABST<Book> priceBST12 = new Node<Book>(new BooksByPrice(), book3, priceBST11, priceBST8);
+  
+  // for author
   
   ABST<Book> authorLeaf = new Leaf<Book>(new BooksByAuthor());
   ABST<Book> authorBST1 = new Node<Book>(new BooksByAuthor(), book1, authorLeaf, authorLeaf);
-  ABST<Book> authorBST2 = new Node<Book>(new BooksByAuthor(), book2, authorBST1, authorLeaf);
-  ABST<Book> authorBST3 = new Node<Book>(new BooksByAuthor(), book3, authorBST2, authorBST1);
-  ABST<Book> authorBST4 = new Node<Book>(new BooksByAuthor(), book4, authorBST3, authorBST2);
-  ABST<Book> authorBST5 = new Node<Book>(new BooksByAuthor(), book5, authorBST4, authorLeaf);
+  ABST<Book> authorBST2 = new Node<Book>(new BooksByAuthor(), book3, authorLeaf, authorLeaf);
+  ABST<Book> authorBST3 = new Node<Book>(new BooksByAuthor(), book2, authorBST1, authorBST2);
+  ABST<Book> authorBST4 = new Node<Book>(new BooksByAuthor(), book6, authorLeaf, authorLeaf); 
+  ABST<Book> authorBST5 = new Node<Book>(new BooksByAuthor(), book8, authorLeaf, authorLeaf); 
+  ABST<Book> authorBST6 = new Node<Book>(new BooksByAuthor(), book7, authorBST4, authorBST5); 
+  ABST<Book> authorBST7 = new Node<Book>(new BooksByAuthor(), book5, authorBST3, authorBST6); 
   
-  ABST<Book> titleLeaf = new Leaf<Book>(new BooksByTitle( ));
-  ABST<Book> titleBST1 = new Node<Book>(new BooksByTitle(), book1, titleLeaf, titleLeaf);
-  ABST<Book> titleBST2 = new Node<Book>(new BooksByTitle(), book2, titleLeaf, titleLeaf);
-  ABST<Book> titleBST3 = new Node<Book>(new BooksByTitle(), book3, titleBST2, titleBST1);
-  ABST<Book> titleBST4 = new Node<Book>(new BooksByTitle(), book4, titleBST3, titleBST2);
-  ABST<Book> titleBST5 = new Node<Book>(new BooksByTitle(), book5, titleBST4, titleBST3);
+  //tree2
+  ABST<Book> authorBST8 = new Node<Book>(new BooksByAuthor(), book4, authorLeaf, authorLeaf);
+  ABST<Book> authorBST9 = new Node<Book>(new BooksByAuthor(), book5, authorBST8, authorLeaf);
+  ABST<Book> authorBST13 = new Node<Book>(new BooksByAuthor(), book2, authorLeaf, authorLeaf);
+  ABST<Book> authorBST10 = new Node<Book>(new BooksByAuthor(), book3, authorBST13, authorBST9); 
+  
+  //tree 3
+  ABST<Book> authorBST11 = new Node<Book>(new BooksByAuthor(), book2, authorBST1, authorLeaf);
+  ABST<Book> authorBST12 = new Node<Book>(new BooksByAuthor(), book3, authorBST11, authorBST8);
+  
+  // for title
+  
+  ABST<Book> titleLeaf = new Leaf<Book>(new BooksByTitle());
+  ABST<Book> titleBST1 = new Node<Book>(new BooksByTitle(), book1, authorLeaf, authorLeaf);
+  ABST<Book> titleBST2 = new Node<Book>(new BooksByTitle(), book3, authorLeaf, authorLeaf);
+  ABST<Book> titleBST3 = new Node<Book>(new BooksByTitle(), book2, authorBST1, authorBST2);
+  ABST<Book> titleBST4 = new Node<Book>(new BooksByTitle(), book6, authorLeaf, authorLeaf); 
+  ABST<Book> titleBST5 = new Node<Book>(new BooksByTitle(), book8, authorLeaf, authorLeaf); 
+  ABST<Book> titleBST6 = new Node<Book>(new BooksByTitle(), book7, authorBST4, authorBST5); 
+  ABST<Book> titleBST7 = new Node<Book>(new BooksByTitle(), book5, authorBST3, authorBST6); 
+  
+  //tree2
+  ABST<Book> titleBST8 = new Node<Book>(new BooksByTitle(), book4, authorLeaf, authorLeaf);
+  ABST<Book> titleBST9 = new Node<Book>(new BooksByTitle(), book5, authorBST8, authorLeaf);
+  ABST<Book> titleBST13 = new Node<Book>(new BooksByTitle(), book2, authorLeaf, authorLeaf);
+  ABST<Book> titleBST10 = new Node<Book>(new BooksByTitle(), book3, authorBST13, authorBST9); 
+  
+  //tree 3
+  ABST<Book> titleBST11 = new Node<Book>(new BooksByTitle(), book2, authorBST1, authorLeaf);
+  ABST<Book> titleBST12 = new Node<Book>(new BooksByTitle(), book3, authorBST11, authorBST8);
+  
   
   BooksByTitle titleComparator = new BooksByTitle();
   BooksByAuthor authorComparator = new BooksByAuthor();
