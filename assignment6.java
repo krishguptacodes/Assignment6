@@ -286,17 +286,16 @@ class ExamplesArith {
   IArith sqr1 = new UnaryFormula("sqr", const4, new sqr()); // 20.25
   IArith sqr2 = new UnaryFormula("sqr", const3, new sqr()); // 4
 
-  IArith exp1 = new BinaryFormula("mul", new Mul(), plus1, minus2); // -36
-  IArith exp1help = new BinaryFormula("mul", new Mul(), minus2, plus1);
-  IArith exp2 = new BinaryFormula("div", new Div(), exp1, sqr2); // -9
-  
-  IArith exp3 = new UnaryFormula("neg", exp2, new Neg()); // 9
-  IArith exp4 = new BinaryFormula("plus", new Plus(), exp3, neg1); // 4
-  IArith exp5 = new BinaryFormula("div", new Div(), exp4, div1); // 2
-  IArith exp6 = new UnaryFormula("sqr", exp5, new sqr()); // 4
-  IArith exp7 = new BinaryFormula("minus", new Minus(), exp6, const3); // 6
+  IArith exp1 = new BinaryFormula(new Mul(), "mul", plus1, minus2); // -36
+  IArith exp1help = new BinaryFormula(new Mul(), "mul", minus2, plus1);
+  IArith exp2 = new BinaryFormula(new Div(), "div", exp1, sqr2); // -9
+  IArith exp3 = new UnaryFormula( new Neg()), "neg", exp2; // 9
+  IArith exp4 = new BinaryFormula(new Plus(), "plus", exp3, neg1); // 4
+  IArith exp5 = new BinaryFormula(new Div(), "div", exp4, div1); // 2
+  IArith exp6 = new UnaryFormula(new Sqr()"sqr", exp5); // 4
+  IArith exp7 = new BinaryFormula(new Minus(), "minus", exp6, const3); // 6
 
-  IArith exp8 = new BinaryFormula("minus", new Minus(), minus2, div3); // 6
+  IArith exp8 = new BinaryFormula(new Minus(),"minus", minus2, div3); // 6
 
   // testing the EvalVisitor class
   //  boolean testEvalVisitor(Tester t) {  
