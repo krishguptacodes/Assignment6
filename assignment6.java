@@ -1,20 +1,21 @@
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.function.Predicate;
 
 import tester.Tester;
 
 //An IArithVisitor is a function over IArith
 interface IArithVisitor<R> extends Function<IArith, R> {
   R visitConst(Const x);
+
   R visitUnaryFormula(UnaryFormula uf);
+
   R visitBinaryFormula(BinaryFormula bf);
 }
 
 // representing the interface IArith
 interface IArith {
 
-  //all things of IArith can accept visitor
+  // all things of IArith can accept visitor
   <R> R accept(IArithVisitor<R> visitor); 
 
   // helper to find all even numbers
@@ -34,11 +35,12 @@ class Const implements IArith {
   METHODS FOR FIELDS:
    */
   double num;
-  
+
   Const(double num) {
     this.num = num;
   }
 
+  // Accepts a visitor and points to const
   public <R> R accept(IArithVisitor<R> visitor) {
     return visitor.visitConst(this);
   }
@@ -51,6 +53,16 @@ class Const implements IArith {
 
 // representing the UnaryFormua class
 class UnaryFormula implements IArith {
+  Function<Double, Double> func;
+  String name;
+  IArith child;
+
+  UnaryFormula(Function<Double, Double> func, String name, IArith child) {
+    this.name = name;
+    this.child = child;
+    this.func = func;
+  }
+
   /*
   TEMPLATE:
   FIELDS:
@@ -65,16 +77,7 @@ class UnaryFormula implements IArith {
   ... this.child.evenHelper() ... -- Boolean
    */
 
-  String name;
-  IArith child;
-  Function<Double, Double> func;
-
-  UnaryFormula(String name, IArith child, Function<Double, Double> func) {
-    this.name = name;
-    this.child = child;
-    this.func = func;
-  }
-
+  // Accepts a visitor and points to UnaryFormula
   public <R> R accept(IArithVisitor<R> visitor) {
     return visitor.visitUnaryFormula(this);
   }
@@ -105,17 +108,20 @@ class BinaryFormula implements IArith {
   ... this.right.evenHelper() ... -- Boolean
    */
 
+  BiFunction<Double, Double, Double> func;
   String name;
-  BiFunction <Double, Double, Double> func;
   IArith left;
   IArith right;
-  BinaryFormula(String name, BiFunction <Double, Double, Double> func, IArith left, IArith right) {
+
+  BinaryFormula(BiFunction<Double, Double, Double> func, String name, IArith left, IArith right) {
+    this.func = func;
     this.name = name;
     this.left = left;
     this.right = right;
-    this.func = func;
+
   }
 
+  // Accepts a IArithVisitor and points to BinaryFormula
   public <R> R accept(IArithVisitor<R> visitor) {
     return visitor.visitBinaryFormula(this);
   }
@@ -126,7 +132,8 @@ class BinaryFormula implements IArith {
   }
 }
 
-// EvalVisitor is a function over IArith that visits an IArith and evaluates the tree to a Double answer.
+// EvalVisitor is a function over IArith that visits 
+// an IArith and evaluates the tree to a Double answer.
 class EvalVisitor implements IArithVisitor<Double> {
 
   // from IArith interface
@@ -185,12 +192,12 @@ class MirrorVisitor implements IArithVisitor<IArith>, Function<IArith, IArith> {
 
   // UnaryFormula implementation
   public IArith visitUnaryFormula(UnaryFormula uf) {
-    return uf;
+    return new UnaryFormula(uf.func, uf.name, uf.child.accept(this));
   }
 
   //BinaryFormula implementation
   public IArith visitBinaryFormula(BinaryFormula bf) {
-    return new BinaryFormula(bf.name, bf.func, bf.right, bf.left);
+    return new BinaryFormula(bf.func, bf.name, bf.right.accept(this), bf.left.accept(this));
   }
 }
 
@@ -241,7 +248,11 @@ class Mul implements BiFunction<Double, Double, Double> {
 // implementing division
 class Div implements BiFunction<Double, Double, Double> {
   public Double apply(Double d1, Double d2) {
-    return d1 / d2;
+    if (d2 == 0) {
+      throw new RuntimeException("you can not divide a number by zero");
+    } else {
+      return d1/d2;
+    }
   } 
 }
 
@@ -255,7 +266,7 @@ class Neg implements Function<Double, Double> {
 }
 
 // implementing squaring
-class sqr implements Function<Double, Double> {
+class Sqr implements Function<Double, Double> {
   public Double apply(Double d) {
     return d * d;
   }    
@@ -266,56 +277,60 @@ class ExamplesArith {
   IArith const2 = new Const(4);
   IArith const3 = new Const(-2);
   IArith const4 = new Const(4.5);
+  IArith const5 = new Const(0);
 
-  IArith plus1 = new BinaryFormula("plus", new Plus(), const1, const2); // 9
-  IArith plus2 = new BinaryFormula("plus", new Plus(), const4, const4); // 9
+  IArith plus1 = new BinaryFormula(new Plus(),"plus" , const1, const2); // 9
+  IArith plus2 = new BinaryFormula(new Plus(), "plus", const4, const4); // 9
 
-  IArith minus1 = new BinaryFormula("minus", new Minus(), const1, const2); // 1
-  IArith minus2 = new BinaryFormula("minus", new Minus(), const3, const3); // -4
+  IArith minus1 = new BinaryFormula(new Minus(), "minus", const1, const2); // 1
+  IArith minus2 = new BinaryFormula(new Minus(),"minus", const5, const2); // -4
+  IArith minus2Help = new BinaryFormula(new Minus(), "minus", const2, const5); // 
 
-  IArith mul1 = new BinaryFormula("mul", new Mul(), plus1, const3); // 27
-  IArith mul2 = new BinaryFormula("mul", new Mul(), const3, const4); //-9
+  IArith mul1 = new BinaryFormula(new Mul(), "mul", plus1, const3); // 27
+  IArith mul2 = new BinaryFormula(new Mul(), "mul", const3, const4); //-9
 
-  IArith div1 = new BinaryFormula("div", new Div(), plus1, const4); // 2
-  IArith div2 = new BinaryFormula("div", new Div(), const1, const1); // 1
-  IArith div3 = new BinaryFormula("div", new Div(), const2, const3); // 1
+  IArith div1 = new BinaryFormula(new Div(), "div", plus1, const4); // 2
+  IArith div2 = new BinaryFormula(new Div(), "div", const1, const1); // 1
+  IArith div3 = new BinaryFormula(new Div(), "div", const2, const3); // 1
+  IArith div4 = new BinaryFormula(new Div(), "div", const2, const5); // divide by 0
 
-  IArith neg1 = new UnaryFormula("neg", const1, new Neg()); // -5
-  IArith neg2 = new UnaryFormula("neg", const3, new Neg()); // 2
+  IArith neg1 = new UnaryFormula(new Neg(), "neg", const1); // -5
+  IArith neg2 = new UnaryFormula(new Neg(), "neg", const3); // 2
 
-  IArith sqr1 = new UnaryFormula("sqr", const4, new sqr()); // 20.25
-  IArith sqr2 = new UnaryFormula("sqr", const3, new sqr()); // 4
+  IArith sqr1 = new UnaryFormula(new Sqr(), "sqr", const4); // 20.25
+  IArith sqr2 = new UnaryFormula(new Sqr(), "sqr", const3); // 4
 
   IArith exp1 = new BinaryFormula(new Mul(), "mul", plus1, minus2); // -36
   IArith exp1help = new BinaryFormula(new Mul(), "mul", minus2, plus1);
   IArith exp2 = new BinaryFormula(new Div(), "div", exp1, sqr2); // -9
-  IArith exp3 = new UnaryFormula( new Neg()), "neg", exp2; // 9
+  IArith exp3 = new UnaryFormula( new Neg(), "neg", exp2); // 9
   IArith exp4 = new BinaryFormula(new Plus(), "plus", exp3, neg1); // 4
   IArith exp5 = new BinaryFormula(new Div(), "div", exp4, div1); // 2
-  IArith exp6 = new UnaryFormula(new Sqr()"sqr", exp5); // 4
+  IArith exp6 = new UnaryFormula(new Sqr(), "sqr", exp5); // 4
   IArith exp7 = new BinaryFormula(new Minus(), "minus", exp6, const3); // 6
 
   IArith exp8 = new BinaryFormula(new Minus(),"minus", minus2, div3); // 6
 
-  // testing the EvalVisitor class
-  //  boolean testEvalVisitor(Tester t) {  
-  //    return t.checkExpect(plus1.accept(new EvalVisitor()), 9.0) 
-  //        && t.checkExpect(const1.accept(new EvalVisitor()), 5.0)
-  //        && t.checkExpect(mul1.accept(new EvalVisitor()), -18.0)
-  //        && t.checkExpect(div1.accept(new EvalVisitor()), 2.0)
-  //        && t.checkExpect(minus1.accept(new EvalVisitor()), 1.0)
-  //        && t.checkExpect(minus2.accept(new EvalVisitor()), 0.0)
-  //        && t.checkExpect(neg1.accept(new EvalVisitor()), -5.0)
-  //        && t.checkExpect(sqr1.accept(new EvalVisitor()), 20.25)
-  //        && t.checkExpect(exp1.accept(new EvalVisitor()), -36)
-  //        && t.checkExpect(exp2.accept(new EvalVisitor()), -9)
-  //        && t.checkExpect(exp3.accept(new EvalVisitor()), 9)
-  //        && t.checkExpect(exp4.accept(new EvalVisitor()), 4)
-  //        && t.checkExpect(exp5.accept(new EvalVisitor()), 2)
-  //        && t.checkExpect(exp6.accept(new EvalVisitor()), 4)
-  //        && t.checkExpect(exp7.accept(new EvalVisitor()), 6);
-  //        
-  //  }
+  //   testing the EvalVisitor class
+  boolean testEvalVisitor(Tester t) {  
+    return t.checkExpect(plus1.accept(new EvalVisitor()), 9.0) 
+        && t.checkExpect(const1.accept(new EvalVisitor()), 5.0)
+        && t.checkExpect(mul1.accept(new EvalVisitor()), -18.0)
+        && t.checkExpect(div1.accept(new EvalVisitor()), 2.0)
+        && t.checkExpect(minus1.accept(new EvalVisitor()), 1.0)
+        && t.checkExpect(minus2.accept(new EvalVisitor()), -4.0)
+        && t.checkExpect(neg1.accept(new EvalVisitor()), -5.0)
+        && t.checkExpect(sqr1.accept(new EvalVisitor()), 20.25)
+
+        && t.checkExpect(exp1.accept(new EvalVisitor()), -36.0)
+        && t.checkExpect(exp2.accept(new EvalVisitor()), -9.0)
+        && t.checkExpect(exp3.accept(new EvalVisitor()), 9.0)
+        && t.checkExpect(exp4.accept(new EvalVisitor()), 4.0)
+        && t.checkExpect(exp5.accept(new EvalVisitor()), 2.0)
+        && t.checkExpect(exp6.accept(new EvalVisitor()), 4.0)
+        && t.checkExpect(exp7.accept(new EvalVisitor()), 6.0);
+
+  }
 
   // testing the PrintVisitor class
   boolean testPrintVisitor(Tester t) {  
@@ -324,46 +339,48 @@ class ExamplesArith {
         && t.checkExpect(mul1.accept(new PrintVisitor()), "(mul (plus 5.0 4.0) -2.0)")
         && t.checkExpect(div1.accept(new PrintVisitor()), "(div (plus 5.0 4.0) 4.5)")
         && t.checkExpect(minus1.accept(new PrintVisitor()), "(minus 5.0 4.0)")
-        && t.checkExpect(minus2.accept(new PrintVisitor()), "(minus -2.0 -2.0)")
+        && t.checkExpect(minus2.accept(new PrintVisitor()), "(minus 0.0 4.0)")
         && t.checkExpect(neg1.accept(new PrintVisitor()), "(neg 5.0)")
         && t.checkExpect(sqr1.accept(new PrintVisitor()), "(sqr 4.5)")
         && t.checkExpect(exp1.accept(new PrintVisitor()), "(mul (plus 5.0 4.0) "
-            + "(minus -2.0 -2.0))")
+            + "(minus 0.0 4.0))")
         && t.checkExpect(exp2.accept(new PrintVisitor()), "(div (mul (plus 5.0 4.0) "
-            + "(minus -2.0 -2.0)) (sqr -2.0))")
+            + "(minus 0.0 4.0)) (sqr -2.0))")
         && t.checkExpect(exp3.accept(new PrintVisitor()), "(neg (div (mul (plus 5.0 4.0) "
-            + "(minus -2.0 -2.0)) (sqr -2.0)))")
+            + "(minus 0.0 4.0)) (sqr -2.0)))")
         && t.checkExpect(exp4.accept(new PrintVisitor()), "(plus (neg (div (mul (plus 5.0 4.0) "
-            + "(minus -2.0 -2.0)) (sqr -2.0))) (neg 5.0))")
+            + "(minus 0.0 4.0)) (sqr -2.0))) (neg 5.0))")
         && t.checkExpect(exp5.accept(new PrintVisitor()), "(div (plus (neg (div (mul "
-            + "(plus 5.0 4.0) (minus -2.0 -2.0)) (sqr -2.0))) (neg 5.0)) (div (plus 5.0 4.0) " + "4.5))")
+            + "(plus 5.0 4.0) (minus 0.0 4.0)) (sqr -2.0))) "
+            + "(neg 5.0)) (div (plus 5.0 4.0) " + "4.5))")
         && t.checkExpect(exp6.accept(new PrintVisitor()), "(sqr (div (plus (neg "
-            + "(div (mul (plus 5.0 4.0) (minus -2.0 -2.0)) (sqr -2.0))) (neg 5.0)) "
+            + "(div (mul (plus 5.0 4.0) (minus 0.0 4.0)) (sqr -2.0))) (neg 5.0)) "
             + "(div (plus 5.0 4.0) " + "4.5)))")
-        && t.checkExpect(exp7.accept(new PrintVisitor()), "(minus (sqr (div (plus (neg (div (mul (plus 5.0 4.0)"
-            + " (minus -2.0 -2.0)) (sqr -2.0))) (neg 5.0)) (div (plus 5.0 4.0) 4.5))) -2.0)");
+        && t.checkExpect(exp7.accept(new PrintVisitor()), "(minus (sqr (div (plus "
+            + "(neg (div (mul (plus 5.0 4.0)"
+            + " (minus 0.0 4.0)) (sqr -2.0))) (neg 5.0)) (div (plus 5.0 4.0) 4.5))) -2.0)");
 
   }
 
   // testing the MirrorVisitor class
   boolean testMirrorVisitor(Tester t) {
     // mirror tests
-    return t.checkExpect(plus1.accept(new MirrorVisitor()), new BinaryFormula("plus", 
-        new Plus(), const2, const1))
+    return t.checkExpect(plus1.accept(new MirrorVisitor()), new BinaryFormula(new Plus(), 
+        "plus", const2, const1))
         && t.checkExpect(const1.accept(new MirrorVisitor()), const1)
         && t.checkExpect(mul1.accept(new MirrorVisitor()), 
-            new BinaryFormula("mul", new Mul(), const3, plus1))
+            new BinaryFormula(new Mul(), "mul", const3, plus1))
         && t.checkExpect(div1.accept(new MirrorVisitor()), 
-            new BinaryFormula("div", new Div(), const4, plus1))
+            new BinaryFormula(new Div(), "div", const4, plus1))        
         && t.checkExpect(minus1.accept(new MirrorVisitor()),  
-            new BinaryFormula("minus", new Minus(), const2, const1))
+            new BinaryFormula(new Minus(), "minus", const2, const1))
         && t.checkExpect(minus2.accept(new MirrorVisitor()), 
-            new BinaryFormula("minus", new Minus(), const3, const3))
+            new BinaryFormula(new Minus(), "minus", const2, const5))
         && t.checkExpect(neg1.accept(new MirrorVisitor()), neg1)
         && t.checkExpect(sqr1.accept(new MirrorVisitor()), sqr1)
         && t.checkExpect(exp1.accept(new MirrorVisitor()), exp1help)
         && t.checkExpect(exp2.accept(new MirrorVisitor()),
-            new BinaryFormula("div", new Div(), sqr2, exp1help));
+            new BinaryFormula(new Div(), "div", sqr2, exp1help));
   }
 
   // testing the AllEvenVisitor class
@@ -393,9 +410,16 @@ class ExamplesArith {
         && t.checkExpect(neg1.evenHelper(), false)
         && t.checkExpect(exp2.evenHelper(), false)
         && t.checkExpect(exp8.evenHelper(), true);
-    
+
+  }
+  // exception testing for the divide case
+  boolean testRuntimeException(Tester t) {
+    return t.checkException(new RuntimeException("you can not divide a number by zero"),
+            this.div1, "accept", new EvalVisitor());
+
   }
 }
+
 
 
 
