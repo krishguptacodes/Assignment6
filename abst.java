@@ -371,13 +371,17 @@ class ExampleBooks{
   // for author
 
   ABST<Book> authorLeaf = new Leaf<Book>(new BooksByAuthor());
+  ABST<Book> authorBST1help = new Node<Book>(new BooksByAuthor(), book4, authorLeaf, authorLeaf);
   ABST<Book> authorBST1 = new Node<Book>(new BooksByAuthor(), book1, authorLeaf, authorLeaf);
   ABST<Book> authorBST2 = new Node<Book>(new BooksByAuthor(), book3, authorLeaf, authorLeaf);
+  ABST<Book> authorBST2help = new Node<Book>(new BooksByAuthor(), book3, authorLeaf, authorBST1help);
   ABST<Book> authorBST3 = new Node<Book>(new BooksByAuthor(), book2, authorBST1, authorBST2);
+  ABST<Book> authorBST3help = new Node<Book>(new BooksByAuthor(), book2, authorBST1, authorBST2help);
   ABST<Book> authorBST4 = new Node<Book>(new BooksByAuthor(), book6, authorLeaf, authorLeaf); 
   ABST<Book> authorBST5 = new Node<Book>(new BooksByAuthor(), book8, authorLeaf, authorLeaf); 
   ABST<Book> authorBST6 = new Node<Book>(new BooksByAuthor(), book7, authorBST4, authorBST5); 
   ABST<Book> authorBST7 = new Node<Book>(new BooksByAuthor(), book5, authorBST3, authorBST6); 
+  ABST<Book> authorBST7help = new Node<Book>(new BooksByAuthor(), book5, authorBST3help, authorBST6); 
 
   //tree2
   ABST<Book> authorBST8 = new Node<Book>(new BooksByAuthor(), book4, authorLeaf, authorLeaf);
@@ -393,31 +397,34 @@ class ExampleBooks{
 
   //tree 1
   ABST<Book> titleLeaf = new Leaf<Book>(new BooksByTitle());
-  ABST<Book> titleBST1 = new Node<Book>(new BooksByTitle(), book1, authorLeaf, authorLeaf);
-  ABST<Book> titleBST2 = new Node<Book>(new BooksByTitle(), book3, authorLeaf, authorLeaf);
-  ABST<Book> titleBST3 = new Node<Book>(new BooksByTitle(), book2, authorBST1, authorBST2);
-  ABST<Book> titleBST4 = new Node<Book>(new BooksByTitle(), book6, authorLeaf, authorLeaf); 
-  ABST<Book> titleBST5 = new Node<Book>(new BooksByTitle(), book8, authorLeaf, authorLeaf); 
-  ABST<Book> titleBST6 = new Node<Book>(new BooksByTitle(), book7, authorBST4, authorBST5); 
-  ABST<Book> titleBST7 = new Node<Book>(new BooksByTitle(), book5, authorBST3, authorBST6); 
+  ABST<Book> titleBST1 = new Node<Book>(new BooksByTitle(), book1, titleLeaf, titleLeaf);
+  ABST<Book> titleBST2 = new Node<Book>(new BooksByTitle(), book3, titleLeaf, titleLeaf);
+  ABST<Book> titleBST3 = new Node<Book>(new BooksByTitle(), book2, titleBST1, titleBST2);
+  ABST<Book> titleBST4 = new Node<Book>(new BooksByTitle(), book6, titleLeaf, titleLeaf); 
+  ABST<Book> titleBST5 = new Node<Book>(new BooksByTitle(), book8, titleLeaf, titleLeaf); 
+  ABST<Book> titleBST6 = new Node<Book>(new BooksByTitle(), book7, titleBST4, titleBST5); 
+  ABST<Book> titleBST7 = new Node<Book>(new BooksByTitle(), book5, titleBST3, titleBST6); 
 
   //tree2
-  ABST<Book> titleBST8 = new Node<Book>(new BooksByTitle(), book4, authorLeaf, authorLeaf);
-  ABST<Book> titleBST9 = new Node<Book>(new BooksByTitle(), book5, authorBST8, authorLeaf);
-  ABST<Book> titleBST13 = new Node<Book>(new BooksByTitle(), book2, authorLeaf, authorLeaf);
-  ABST<Book> titleBST10 = new Node<Book>(new BooksByTitle(), book3, authorBST13, authorBST9); 
+  ABST<Book> titleBST8 = new Node<Book>(new BooksByTitle(), book4, titleLeaf, titleLeaf);
+  ABST<Book> titleBST8help = new Node<Book>(new BooksByTitle(), book6, titleLeaf, titleLeaf);
+  ABST<Book> titleBST9 = new Node<Book>(new BooksByTitle(), book5, titleBST8, titleLeaf);
+  ABST<Book> titleBST9help = new Node<Book>(new BooksByTitle(), book5, titleBST8, titleBST8help);
+  ABST<Book> titleBST13 = new Node<Book>(new BooksByTitle(), book2, titleLeaf, titleLeaf);
+  ABST<Book> titleBST10 = new Node<Book>(new BooksByTitle(), book3, titleBST13, titleBST9); 
+  ABST<Book> titleBST10help = new Node<Book>(new BooksByTitle(), book3, titleBST13, titleBST9help); 
 
   //tree 3
-  ABST<Book> titleBST11 = new Node<Book>(new BooksByTitle(), book2, authorBST1, authorLeaf);
-  ABST<Book> titleBST12 = new Node<Book>(new BooksByTitle(), book3, authorBST11, authorBST8);
+  ABST<Book> titleBST11 = new Node<Book>(new BooksByTitle(), book2, titleBST1, titleLeaf);
+  ABST<Book> titleBST12 = new Node<Book>(new BooksByTitle(), book3, titleBST11, titleBST8);
 
   
   IList<Book> mtlist = new MtList<Book>();
-  IList<Book> booklist1 = new ConsList<Book>(book2, new ConsList<Book>(book3, 
+  IList<Book> booklist2 = new ConsList<Book>(book2, new ConsList<Book>(book3, 
       new ConsList<Book>(book4, new ConsList<Book>(book5, new MtList<Book>()))));
-  IList<Book> booklist2 = new ConsList<Book>(book1, new ConsList<Book>(book2, 
-      new ConsList<Book>(book3, new ConsList<Book>(book4, new MtList<Book>()))));
   IList<Book> booklist3 = new ConsList<Book>(book1, new ConsList<Book>(book2, 
+      new ConsList<Book>(book3, new ConsList<Book>(book4, new MtList<Book>()))));
+  IList<Book> booklist1 = new ConsList<Book>(book1, new ConsList<Book>(book2, 
       new ConsList<Book>(book3, new ConsList<Book>(book4, new ConsList<Book>(book5, 
           new ConsList<Book>(book6, new ConsList<Book>(book7, 
               new ConsList<Book>(book8, new MtList<Book>()))))))));
@@ -430,16 +437,11 @@ class ExampleBooks{
   // testing for insert method 
   public boolean testInsert(Tester t) {
     return // for price 
-        t.checkExpect(this.priceLeaf.insert(book1), this.priceBST1)
+        t.checkExpect(this.priceLeaf.insert(book1), this.priceBST1) // duplicate case
         && t.checkExpect(this.priceBST2.insert(book1), this.priceTreeHelp)
-        && t.checkExpect(this.priceBST7.insert(book8), priceBST7HelpInsert); 
-    // if duplicate and leaf at end
-    // if duplicate but with no leaf
-    // not duplicate case
-
-    // for author
-
-    // for title
+        && t.checkExpect(this.priceBST7.insert(book8), priceBST7HelpInsert)
+        && t.checkExpect(this.titleBST10.insert(book6), titleBST10help) // not duplicate case
+        && t.checkExpect(this.authorBST7.insert(book4), authorBST7help); // if in the middle of the tree
   }
 
   // testing for the present method
