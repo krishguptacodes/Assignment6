@@ -398,6 +398,9 @@ class ExampleBooks{
   ABST<Book> authorBST11 = new Node<Book>(new BooksByAuthor(), book2, authorBST1, authorLeaf);
   ABST<Book> authorBST12 = new Node<Book>(new BooksByAuthor(), book3, authorBST11, authorBST8);
   
+  ABST<Book> authorBSTdatahelp4 = new Node<Book>(new BooksByAuthor(), book4, authorBST2, authorLeaf);
+  ABST<Book> authorBSTdatahelp5 = new Node<Book>(new BooksByAuthor(), book2, authorBST1, authorBSTdatahelp4);
+  
   
 
   // for title
@@ -542,7 +545,7 @@ class ExampleBooks{
      && t.checkExpect(this.priceBST5.sameTree(this.priceBST7), false)
      && t.checkExpect(this.titleBST11.sameTree(this.authorBST2), false)
      && t.checkExpect(this.priceBST2.sameTree(this.authorBST2), false)
-     && t.checkExpect(this.priceBST2.sameTree(this.authorBST2), false)x;
+     && t.checkExpect(this.priceBST2.sameTree(this.authorBST2), false)
   }
   
   
@@ -553,6 +556,12 @@ class ExampleBooks{
 
 }
 
+
+
+ABST<Book> authorBSTdatahelp4 = new Node<Book>(new BooksByAuthor(), book4, authorBST2, authorLeaf);
+ABST<Book> authorBSTdatahelp5 = new Node<Book>(new BooksByAuthor(), book2, authorBST1, authorBSTdatahelp4);
+
+&& t.checkExpect(this.authorBSTdatahelp5.sameTree(this.authorBST2), authorBST12);
 
 
 
