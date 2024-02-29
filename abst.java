@@ -388,10 +388,17 @@ class ExampleBooks{
   ABST<Book> authorBST9 = new Node<Book>(new BooksByAuthor(), book5, authorBST8, authorLeaf);
   ABST<Book> authorBST13 = new Node<Book>(new BooksByAuthor(), book2, authorLeaf, authorLeaf);
   ABST<Book> authorBST10 = new Node<Book>(new BooksByAuthor(), book3, authorBST13, authorBST9); 
+  
+  ABST<Book> authorBSTdatahelp = new Node<Book>(new BooksByAuthor(), book2, authorLeaf, authorLeaf);
+  ABST<Book> authorBSTdatahelp1 = new Node<Book>(new BooksByAuthor(), book5, authorLeaf, authorLeaf);
+  ABST<Book> authorBSTdatahelp2 = new Node<Book>(new BooksByAuthor(), book3, authorBSTdatahelp, authorLeaf); 
+  ABST<Book> authorBSTdatahelp3 = new Node<Book>(new BooksByAuthor(), book3, authorBSTdatahelp2, authorBSTdatahelp1); 
 
   //tree 3
   ABST<Book> authorBST11 = new Node<Book>(new BooksByAuthor(), book2, authorBST1, authorLeaf);
   ABST<Book> authorBST12 = new Node<Book>(new BooksByAuthor(), book3, authorBST11, authorBST8);
+  
+  
 
   // for title
 
@@ -422,9 +429,9 @@ class ExampleBooks{
   IList<Book> mtlist = new MtList<Book>();
   IList<Book> booklist2 = new ConsList<Book>(book2, new ConsList<Book>(book3, 
       new ConsList<Book>(book4, new ConsList<Book>(book5, new MtList<Book>()))));
-  IList<Book> booklist3 = new ConsList<Book>(book1, new ConsList<Book>(book2, 
-      new ConsList<Book>(book3, new ConsList<Book>(book4, new MtList<Book>()))));
   IList<Book> booklist1 = new ConsList<Book>(book1, new ConsList<Book>(book2, 
+      new ConsList<Book>(book3, new ConsList<Book>(book4, new MtList<Book>()))));
+  IList<Book> booklist3 = new ConsList<Book>(book1, new ConsList<Book>(book2, 
       new ConsList<Book>(book3, new ConsList<Book>(book4, new ConsList<Book>(book5, 
           new ConsList<Book>(book6, new ConsList<Book>(book7, 
               new ConsList<Book>(book8, new MtList<Book>()))))))));
@@ -517,7 +524,7 @@ class ExampleBooks{
             new Node<Book>(new BooksByPrice(), book3, priceLeaf, priceBST9));
   }
   
-  // testing the getRight method
+  // testing the sameTree method
   public boolean testSameTree(Tester t) {
     return 
         t.checkExpect(this.priceBST6.sameTree(this.priceBST6), true)
@@ -528,8 +535,18 @@ class ExampleBooks{
         && t.checkExpect(this.authorBST11.sameTree(this.priceBST10), false);
   }
   
+  // testing the sameData method
+  public boolean testSameData(Tester t) {
+    return 
+        t.checkExpect(this.priceBST10.sameTree(this.authorBSTdatahelp3), true)
+     && t.checkExpect(this.priceBST5.sameTree(this.priceBST7), false)
+     && t.checkExpect(this.titleBST11.sameTree(this.authorBST2), false)
+     && t.checkExpect(this.priceBST2.sameTree(this.authorBST2), false)
+     && t.checkExpect(this.priceBST2.sameTree(this.authorBST2), false)x;
+  }
   
-  // testing the getRight method
+  
+  // testing the getBuildList method
   public boolean testBuildList(Tester t) {
 
   }
